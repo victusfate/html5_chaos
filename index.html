@@ -6,28 +6,252 @@
   <title>victusfate/html5_chaos @ GitHub</title>
 
   <style type="text/css">
-    body {
-      margin-top: 1.0em;
-      background-color: #5c2545;
-      font-family: Helvetica, Arial, FreeSans, san-serif;
-      color: #ffffff;
-    }
-    #container {
-      margin: 0 auto;
-      width: 700px;
-    }
-    h1 { font-size: 3.8em; color: #a3daba; margin-bottom: 3px; }
-    h1 .small { font-size: 0.4em; }
-    h1 a { text-decoration: none }
-    h2 { font-size: 1.5em; color: #a3daba; }
-    h3 { text-align: center; color: #a3daba; }
-    a { color: #a3daba; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
-    .download { float: right; }
-    pre { background: #000; color: #fff; padding: 15px;}
-    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
-    .footer { text-align:center; padding-top:30px; font-style: italic; }
+	h1 {
+		color:white;
+		font-weight:bold;
+		font-family:"Trebuchet MS",Arial, Helvetica, sans-serif;
+	}
+
+	body {
+		margin-top: 1.0em;
+		background-image:-moz-radial-gradient(center -100px 45deg, circle farthest-corner, #999 25px, #333 450px);
+		background-image:-webkit-gradient(radial, 50% 0, 25, 50% 0, 450, from(#999), to(#333));font-family: "Helvetica,Arial,FreeSans";
+		font-family: "Helvetica,Arial,FreeSans";
+		color: #ffffff;
+	}
+	
+	a, a:visited {
+		text-decoration:none;
+		outline:none;
+	}
+
+	a { color:#CCFFFF; }
+
+	a:visited { color:#66FFFF; }
+
+
+	a:hover{
+		text-decoration:underline;
+		color: red;
+	}
+	
+	
+	#container {
+		margin: 0 auto;
+		width: 700px;
+	}
+	h1 {
+		font-size: 2em;
+		color: #450e0d;
+		margin-bottom: 3px;
+	}
+	h1 .small {
+		font-size: 0.4em;
+	}
+	h1 a {
+		text-decoration: none
+	}
+	h2 {
+		font-size: 1.5em;
+		color: red;
+	}
+	h3 {
+		text-align: center;
+		color: red;
+	}
+
+	.description {
+		font-size: 1.2em;
+		margin-bottom: 30px;
+		margin-top: 30px;
+		font-style: italic;
+	}
+	.download {
+		float: right;
+	}
+	pre {
+		background: #fff;
+		color: #000;
+		padding: 15px;
+		font-size:.8em;
+		font-family: monospace;
+	}
+	hr {
+		border: 0;
+		width: 80%;
+		border-bottom: 1px solid #aaa
+	}
+	.footer {
+		text-align: center;
+		padding-top: 30px;
+		font-style: italic;
+	}
   </style>
+
+	<script type='text/javascript' src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+	<script type='text/javascript' src="http://jashkenas.github.com/coffee-script/extras/coffee-script.js"></script>
+<script type='text/coffeescript'>
+
+Particle = (x, y) ->
+	@x = x
+	@y = y
+	@vx = 0
+	@vy = 0
+
+FPSCounter = (ctx) ->
+	@t = new Date().getTime() / 1000.0
+	@n = 0
+	@fps = 0.0
+	@draw = ->
+		@n++
+		if @n == 10
+			@n = 0
+			t = new Date().getTime() / 1000.0
+			@fps = Math.round(100 / (t - @t)) / 10
+			@t = t
+		ctx.fillStyle = "white"
+		ctx.fillText "FPS: " + @fps, 1, 15
+
+window.Float32Array = Array unless window.Float32Array
+WIDTH = 800
+HEIGHT = 600
+NPARTICLES = 10000
+CELLSIZE = 20
+CELLSIZE2 = CELLSIZE / 2
+canvas = document.getElementById("c")
+screenRatio = 1.0
+if navigator.userAgent.match(/iPad/i)
+	WIDTH = 320
+	HEIGHT = 240
+	NPARTICLES /= 5
+	screenRatio = WIDTH / 640
+	canvas.style.width = "640px"
+	canvas.style.height = "480px"
+	document.getElementById("d").style.width = canvas.style.width
+	document.getElementById("d").style["margin-top"] = "30px"
+	document.getElementById("h").style.display = "none"
+else if navigator.userAgent.match(/iPhone|iPod|Android/i)
+	WIDTH = 320
+	HEIGHT = 200
+	NPARTICLES /= 5
+	screenRatio = WIDTH / window.innerWidth
+	canvas.style.width = "100%"
+	canvas.style.height = innerHeight + "px"
+	document.getElementById("d").style.width = canvas.style.width
+	document.getElementById("d").style.border = 0
+	document.getElementById("h").style.display = "none"
+	document.getElementById("header").style.display = "none"
+	if navigator.userAgent.match(/Android/i)
+		canvas.style.height = "1000px"
+		setTimeout ->
+			window.scrollTo 0, window.innerHeight
+			setTimeout ->
+				canvas.style.height = document.documentElement.clientHeight + "px"
+			, 1
+		, 100
+ctx = canvas.getContext("2d")
+particles = new Float32Array(NPARTICLES * 4)
+flow = new Float32Array(WIDTH * HEIGHT / CELLSIZE / CELLSIZE * 2)
+CELLS_X = WIDTH / 20
+floor = Math.floor
+
+i = 0
+while i < particles.length
+	particles[i++] = Math.random() * WIDTH
+	particles[i++] = Math.random() * HEIGHT
+	particles[i++] = 0
+	particles[i++] = 0
+
+i = 0
+while i < flow.length
+	flow[i] = 0
+	i++
+
+start = 
+	x: 0
+	y: 0
+
+down = false
+canvas.onmousedown = (e) ->
+	start.x = (e.clientX - canvas.offsetLeft) * screenRatio
+	start.y = e.clientY - canvas.offsetTop * screenRatio
+	down = true
+
+canvas.ontouchstart = (e) ->
+	canvas.onmousedown e.touches[0]
+	false
+
+canvas.onmouseup = canvas.ontouchend = ->
+	down = false
+
+canvas.ontouchmove = (e) ->
+	canvas.onmousemove e.touches[0]
+
+canvas.onmousemove = (e) ->
+	mx = (e.clientX - canvas.offsetLeft) * screenRatio
+	my = (e.clientY - canvas.offsetTop) * screenRatio
+	return	if not down or mx == start.x and my == start.y
+	ai = (floor(mx / CELLSIZE) + floor(my / CELLSIZE) * floor(WIDTH / CELLSIZE)) * 2
+	flow[ai] += (mx - start.x) * 0.4
+	flow[ai + 1] += (my - start.y) * 0.4
+	start.x = mx
+	start.y = my
+
+setInterval ->
+	vd = 0.95
+	ad = 0.95
+	ar = 0.004
+	w1 = WIDTH - 1
+	ctx.fillStyle = "rgba(0, 0, 0, 0.6)"
+	ctx.globalCompositeOperation = "source-over"
+	ctx.fillRect 0, 0, WIDTH, HEIGHT
+	ctx.fillStyle = "rgba(100, 100, 255, 0.8)"
+	ctx.globalCompositeOperation = "lighter"
+	i = 0
+	l = particles.length
+
+	while i < l
+		x = particles[i]
+		y = particles[i + 1]
+		vx = particles[i + 2]
+		vy = particles[i + 3]
+		ai = (~~(x / CELLSIZE) + ~~(y / CELLSIZE) * CELLS_X) * 2
+		ax = flow[ai]
+		ay = flow[ai + 1]
+		ax = (ax + vx * ar) * ad
+		ay = (ay + vy * ar) * ad
+		vx = (vx + ax) * vd
+		vy = (vy + ay) * vd
+		x += vx
+		y += vy
+		ctx.fillRect ~~x, ~~y, 2, 2
+		if x < 0
+			vx *= -1
+			x = 0
+		else if x > w1
+			x = w1
+			vx *= -1
+		if y < 0
+			vy *= -1
+			y = 0
+		else if y > HEIGHT
+			y = HEIGHT - 1
+			vy *= -1
+		particles[i] = x
+		particles[i + 1] = y
+		particles[i + 2] = vx
+		particles[i + 3] = vy
+		flow[ai] = ax
+		flow[ai + 1] = ay
+		i += 4
+, 33
+fps = new FPSCounter(ctx)
+canvas.width = WIDTH
+canvas.height = HEIGHT
+
+
+</script>
+
 </head>
 
 <body>
@@ -44,13 +268,21 @@
 
     <h1><a href="http://github.com/victusfate/html5_chaos">html5_chaos</a>
       <span class="small">by <a href="http://github.com/victusfate">victusfate</a></span></h1>
-
     <div class="description">
-      from http://29a.ch/2010/12/15/particle-chaos-html5-canvas-demo
+		Chaotic Particles from <a href="http://29a.ch/2010/12/15/particle-chaos-html5-canvas-demo">http://29a.ch/2010/12/15/particle-chaos-html5-canvas-demo</a> 
+	</div>
+	<div id="d">
+		<canvas id="c" width="800" height="600"></canvas>
+    </div>
+    <div class="description">
+		my small contribution is simply learning how to translate these effects in coffeescript so I can more easily read and understand them. 
+		Even that effort is mostly the work of <a href="http://ricostacruz.com/js2coffee/">js2coffee</a> (with generous 2 space replacements with tabs)
+		it didn't quite start up after conversion without inspecting the element. 
     </div>
 
     <h2>Contact</h2>
-<p>Mark Essel (messel@gmail.com)<br/>      </p>
+<p>Mark Essel (messel@gmail.com)
+<br/>      </p>
 
 
     <h2>Download</h2>
