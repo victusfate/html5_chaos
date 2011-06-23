@@ -171,7 +171,7 @@ start =
 	x: 0
 	y: 0
 
-down = false
+down = true
 canvas.onmousedown = (e) ->
 	start.x = (e.clientX - canvas.offsetLeft) * screenRatio
 	start.y = e.clientY - canvas.offsetTop * screenRatio
