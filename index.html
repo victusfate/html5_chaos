@@ -191,7 +191,8 @@ canvas.onmousemove = (e) ->
 	start.x = mx
 	start.y = my
 
-rcolors = ["rgba(255,0,0,0.8)","rgba(255,255,255,0.8)","rgba(255,255,0,0.8)"]
+# rcolors = ["rgba(255,0,0,0.8)","rgba(255,255,255,0.8)","rgba(255,255,0,0.8)"]
+rcolors = ["rgba(30,30,100,0.8)","rgba(50,50,140,0.8)","rgba(70,70,180,0.8)","rgba(90,90,220,0.8)","rgba(120,120,255,0.8)"]
 
 setInterval ->
 	vd = 0.95
@@ -205,6 +206,9 @@ setInterval ->
 	i = 0
 	l = particles.length
 
+	#fixed color
+	ctx.fillStyle = "rgba(120,120,255,0.8)"
+
 	while i < l
 		x  = particles[i]
 		y  = particles[i + 1]
@@ -217,27 +221,29 @@ setInterval ->
 		ay = (ay + vy * ar) * ad
 		vx = (vx + ax) * vd
 		vy = (vy + ay) * vd
-		#position based colors
-#		ctx.fillStyle = "rgba("+~~(255 * (x / WIDTH) )+","+~~(255 * (y / HEIGHT) )+",200,0.8)"
 
-		
 
-		# velocity based colors
-		v1 = vx*vx + vy*vy 
-		if v1 < 2
-			ctx.fillStyle = "rgba("+~~(Math.random()*100+80)+","+~~(Math.random()*100+80)+","+~~(Math.random()*175+80)+",0.8)"
-		else if v1 < 4
-			ctx.fillStyle = "rgba(30,30,100,0.8)"
-		else if v1 < 16
-			ctx.fillStyle = "rgba(50,50,140,0.8)"
-		else if v1 < 36
-			ctx.fillStyle = "rgba(70,70,180,0.8)"
-		else if v1 < 64
-			ctx.fillStyle = "rgba(90,90,220,0.8)"
-		else 
-			ctx.fillStyle = "rgba(120,120,255,0.8)"
+		#random colors
+		#v1 = vx*vx + vy*vy 
+#		if v1 < 1
+#			ctx.fillStyle = "rgba("+~~(Math.random()*100+80)+","+~~(Math.random()*100+80)+","+~~(Math.random()*175+80)+",0.8)"
+#		else
 #			ctx.fillStyle = rcolors[~~(Math.random()*rcolors.length)]
 
+		# velocity based colors
+#		v1 = vx*vx + vy*vy 
+#		if v1 < 1
+#			ctx.fillStyle = "rgba("+~~(Math.random()*100+80)+","+~~(Math.random()*100+80)+","+~~(Math.random()*175+80)+",0.8)"
+#		else if v1 < 4
+#			ctx.fillStyle = "rgba(30,30,100,0.8)"
+#		else if v1 < 16
+#			ctx.fillStyle = "rgba(50,50,140,0.8)"
+#		else if v1 < 36
+#			ctx.fillStyle = "rgba(70,70,180,0.8)"
+#		else if v1 < 64
+#			ctx.fillStyle = "rgba(90,90,220,0.8)"
+#		else 
+#			ctx.fillStyle = "rgba(120,120,255,0.8)"
 
 		x += vx
 		y += vy
