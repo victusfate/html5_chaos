@@ -91,13 +91,6 @@
 	<script type='text/javascript' src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
 	<script type='text/javascript' src="http://jashkenas.github.com/coffee-script/extras/coffee-script.js"></script>
 <script type='text/coffeescript'>
-
-Particle = (x, y) ->
-	@x = x
-	@y = y
-	@vx = 0
-	@vy = 0
-
 FPSCounter = (ctx) ->
 	@t = new Date().getTime() / 1000.0
 	@n = 0
@@ -152,10 +145,11 @@ else if navigator.userAgent.match(/iPhone|iPod|Android/i)
 ctx = canvas.getContext("2d")
 particles = new Float32Array(NPARTICLES * 4)
 flow = new Float32Array(WIDTH * HEIGHT / CELLSIZE / CELLSIZE * 2)
+
 CELLS_X = WIDTH / 20
 floor = Math.floor
 
-i = 0
+i=0
 while i < particles.length
 	particles[i++] = Math.random() * WIDTH
 	particles[i++] = Math.random() * HEIGHT
@@ -197,6 +191,8 @@ canvas.onmousemove = (e) ->
 	start.x = mx
 	start.y = my
 
+rcolors = ["rgba(255,0,0,0.8)","rgba(255,255,255,0.8)","rgba(255,255,0,0.8)"]
+
 setInterval ->
 	vd = 0.95
 	ad = 0.95
@@ -205,14 +201,13 @@ setInterval ->
 	ctx.fillStyle = "rgba(0, 0, 0, 0.6)"
 	ctx.globalCompositeOperation = "source-over"
 	ctx.fillRect 0, 0, WIDTH, HEIGHT
-	ctx.fillStyle = "rgba(100, 100, 255, 0.8)"
 	ctx.globalCompositeOperation = "lighter"
 	i = 0
 	l = particles.length
 
 	while i < l
-		x = particles[i]
-		y = particles[i + 1]
+		x  = particles[i]
+		y  = particles[i + 1]
 		vx = particles[i + 2]
 		vy = particles[i + 3]
 		ai = (~~(x / CELLSIZE) + ~~(y / CELLSIZE) * CELLS_X) * 2
@@ -222,6 +217,28 @@ setInterval ->
 		ay = (ay + vy * ar) * ad
 		vx = (vx + ax) * vd
 		vy = (vy + ay) * vd
+		#position based colors
+#		ctx.fillStyle = "rgba("+~~(255 * (x / WIDTH) )+","+~~(255 * (y / HEIGHT) )+",200,0.8)"
+
+		
+
+		# velocity based colors
+		v1 = vx*vx + vy*vy 
+		if v1 < 2
+			ctx.fillStyle = "rgba("+~~(Math.random()*100+80)+","+~~(Math.random()*100+80)+","+~~(Math.random()*175+80)+",0.8)"
+		else if v1 < 4
+			ctx.fillStyle = "rgba(30,30,100,0.8)"
+		else if v1 < 16
+			ctx.fillStyle = "rgba(50,50,140,0.8)"
+		else if v1 < 36
+			ctx.fillStyle = "rgba(70,70,180,0.8)"
+		else if v1 < 64
+			ctx.fillStyle = "rgba(90,90,220,0.8)"
+		else 
+			ctx.fillStyle = "rgba(120,120,255,0.8)"
+#			ctx.fillStyle = rcolors[~~(Math.random()*rcolors.length)]
+
+
 		x += vx
 		y += vy
 		ctx.fillRect ~~x, ~~y, 2, 2
