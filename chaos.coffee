@@ -35,7 +35,6 @@ if navigator.userAgent.match(/iPad/i)
 	canvas.style.height = "480px"
 	document.getElementById("d").style.width = canvas.style.width
 	document.getElementById("d").style["margin-top"] = "30px"
-	document.getElementById("h").style.display = "none"
 else if navigator.userAgent.match(/iPhone|iPod|Android/i)
 	WIDTH = 320
 	HEIGHT = 200
@@ -45,8 +44,6 @@ else if navigator.userAgent.match(/iPhone|iPod|Android/i)
 	canvas.style.height = innerHeight + "px"
 	document.getElementById("d").style.width = canvas.style.width
 	document.getElementById("d").style.border = 0
-	document.getElementById("h").style.display = "none"
-	document.getElementById("header").style.display = "none"
 	if navigator.userAgent.match(/Android/i)
 		canvas.style.height = "1000px"
 		setTimeout ->
