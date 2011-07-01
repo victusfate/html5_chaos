@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>chaos.coffee</string>
+	<string>index.html</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -16,14 +16,6 @@
 			<key>sourceDirectory</key>
 			<string></string>
 		</dict>
-		<dict>
-			<key>filename</key>
-			<string>chaos.coffee</string>
-			<key>lastUsed</key>
-			<date>2011-06-24T10:14:17Z</date>
-			<key>selected</key>
-			<true/>
-		</dict>
 	</array>
 	<key>fileHierarchyDrawerWidth</key>
 	<integer>189</integer>
@@ -34,54 +26,54 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>37</integer>
+				<integer>29</integer>
 				<key>line</key>
-				<integer>115</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>2</integer>
-		</dict>
-		<key>index.html</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>20</integer>
-				<key>line</key>
-				<integer>113</integer>
+				<integer>170</integer>
 			</dict>
 			<key>columnSelection</key>
 			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>84</integer>
+			<integer>120</integer>
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
-				<integer>15</integer>
+				<integer>2</integer>
 				<key>line</key>
-				<integer>113</integer>
+				<integer>170</integer>
 			</dict>
 			<key>selectTo</key>
 			<dict>
 				<key>column</key>
-				<integer>23</integer>
+				<integer>29</integer>
 				<key>line</key>
-				<integer>113</integer>
+				<integer>170</integer>
 			</dict>
+		</dict>
+		<key>index.html</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>98</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>48</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>chaos.coffee</string>
 		<string>index.html</string>
+		<string>chaos.coffee</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{224, 209}, {1078, 1113}}</string>
+	<string>{{1495, 305}, {1078, 1113}}</string>
 </dict>
 </plist>
