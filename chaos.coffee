@@ -37,15 +37,14 @@ if navigator.userAgent.match(/iPad/i)
 	document.getElementById("d").style["margin-top"] = "30px"
 else if navigator.userAgent.match(/iPhone|iPod|Android/i)
 	WIDTH = 320
-	HEIGHT = 200
+	HEIGHT = 240
 	NPARTICLES /= 5
 	screenRatio = WIDTH / window.innerWidth
-	canvas.style.width = "100%"
-	canvas.style.height = innerHeight + "px"
+	canvas.style.width = "640px"
+	canvas.style.height = "480px"
 	document.getElementById("d").style.width = canvas.style.width
 	document.getElementById("d").style.border = 0
 	if navigator.userAgent.match(/Android/i)
-		canvas.style.height = "1000px"
 		setTimeout ->
 			window.scrollTo 0, window.innerHeight
 			setTimeout ->
